@@ -1,0 +1,174 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IV Alipur Information Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Firebase App (the core Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-bom.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        body { font-family: 'Roboto', sans-serif; background-color: #f0ebf8; }
+        .form-card { background: white; border-radius: 8px; border: 1px solid #dadce0; padding: 24px; margin-bottom: 12px; transition: all 0.3s; }
+        .header-strip { border-top: 10px solid #673ab7; border-radius: 8px 8px 0 0; }
+        .input-underline { width: 100%; border-bottom: 1px solid #dadce0; padding: 8px 0; outline: none; transition: border-color 0.2s; background: transparent; }
+        .input-underline:focus { border-bottom: 2px solid #673ab7; }
+        .required-mark { color: #d93025; }
+        .btn-primary { background-color: #673ab7; color: white; padding: 10px 24px; border-radius: 4px; font-weight: 500; }
+        .btn-primary:hover { background-color: #512da8; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+        .upload-box { border: 1px solid #dadce0; padding: 10px 16px; border-radius: 4px; color: #673ab7; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 50; align-items: center; justify-content: center; flex-direction: column; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="loading" class="loading-overlay">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#673ab7]"></div>
+        <p class="mt-4 text-[#673ab7] font-medium">Submitting Response...</p>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="form-card header-strip">
+            <h1 class="text-3xl font-normal mb-4">IV Alipur Information Form</h1>
+            <p class="text-sm text-gray-700 mb-4">Please provide accurate information for the official record.</p>
+            <p class="text-red-600 text-xs">* Indicates required question</p>
+        </div>
+
+        <form id="officialForm">
+            <!-- Full Name -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Full Name <span class="required-mark">*</span></label>
+                <input type="text" name="fullName" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Father Name -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Father Name <span class="required-mark">*</span></label>
+                <input type="text" name="fatherName" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Registration Number -->
+            <div class="form-card">
+                <label class="block text-base mb-2">IV Registration Number <span class="required-mark">*</span></label>
+                <input type="text" name="regNo" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- DOB -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Date of Birth <span class="required-mark">*</span></label>
+                <input type="date" name="dob" class="input-underline" required>
+            </div>
+
+            <!-- Qualification -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Qualification <span class="required-mark">*</span></label>
+                <input type="text" name="qualification" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Institute -->
+            <div class="form-card">
+                <label class="block text-base mb-2">School/College/University Name <span class="required-mark">*</span></label>
+                <input type="text" name="institute" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Occupation -->
+            <div class="form-card">
+                <label class="block text-base mb-4">Occupation <span class="required-mark">*</span></label>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="radio" name="occupation" value="Employed" class="w-5 h-5 accent-[#673ab7]" required>
+                        <span>Employed</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="radio" name="occupation" value="Student" class="w-5 h-5 accent-[#673ab7]">
+                        <span>Student</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Contact Number <span class="required-mark">*</span></label>
+                <input type="tel" name="phone" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- CNIC -->
+            <div class="form-card">
+                <label class="block text-base mb-2">CNIC No <span class="required-mark">*</span></label>
+                <input type="text" name="cnic" placeholder="00000-0000000-0" class="input-underline" required>
+            </div>
+
+            <!-- Email -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Email Address <span class="required-mark">*</span></label>
+                <input type="email" name="email" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Picture Upload -->
+            <div class="form-card">
+                <label class="block text-base mb-1">Picture <span class="required-mark">*</span></label>
+                <p class="text-xs text-gray-500 mb-3">Upload your profile picture (Max 10MB)</p>
+                <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-plus"></i>
+                    <span>Add file</span>
+                </div>
+                <input type="file" id="fileInput" class="hidden" accept="image/*" required onchange="updateFileName(this)">
+                <p id="fileNameDisplay" class="text-xs text-[#673ab7] mt-2 font-medium"></p>
+            </div>
+
+            <!-- Emergency -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Emergency Contact Name <span class="required-mark">*</span></label>
+                <input type="text" name="emergencyName" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Address -->
+            <div class="form-card">
+                <label class="block text-base mb-2">Current Address <span class="required-mark">*</span></label>
+                <input type="text" name="address" placeholder="Your answer" class="input-underline" required>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-between items-center py-4">
+                <button type="submit" class="btn-primary">Submit</button>
+                <button type="reset" class="text-[#673ab7] font-medium hover:bg-purple-50 px-4 py-2 rounded">Clear form</button>
+            </div>
+        </form>
+
+        <div id="successView" class="hidden py-20 text-center">
+            <h2 class="text-2xl mb-4">Your response has been recorded.</h2>
+            <a href="javascript:location.reload()" class="text-blue-600 underline text-sm">Submit another response</a>
+        </div>
+
+        <footer class="mt-8 text-center text-xs text-gray-500 pb-10 space-y-4">
+            <p>This content is neither created nor endorsed by Google.</p>
+            <div class="text-lg font-medium opacity-70">Google Forms</div>
+        </footer>
+    </div>
+
+    <script>
+        function updateFileName(input) {
+            const display = document.getElementById('fileNameDisplay');
+            if (input.files && input.files[0]) {
+                display.innerText = "Selected: " + input.files[0].name;
+            }
+        }
+
+        document.getElementById('officialForm').onsubmit = async (e) => {
+            e.preventDefault();
+            document.getElementById('loading').style.display = 'flex';
+            
+            // Simulating a database save delay
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('officialForm').classList.add('hidden');
+                document.getElementById('successView').classList.remove('hidden');
+                window.scrollTo(0,0);
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
